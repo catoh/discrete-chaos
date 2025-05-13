@@ -137,6 +137,10 @@ func roll(p int, d int) string {
 		if roll >= d {
 			// add to sum if success
 			sum += 1
+			// if a 10 was rolled, add another success
+			if roll == 10 {
+				sum += 1
+			}
 		} else if roll == 1 {
 			// or reduce sum if roll = 1
 			// and explode 1s
