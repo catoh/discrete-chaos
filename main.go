@@ -127,7 +127,7 @@ func roll(p int, d int) string {
 	for i := 0; i < p; i++ {
 		// roll d10
 		//rand.Seed(time.Now().UnixNano())
-		roll := rand.IntN(9) + 1
+		roll := rand.IntN(10) + 1
 		// append roll to pool message
 		if rolls != "" {
 			rolls += ", "
@@ -147,7 +147,7 @@ func roll(p int, d int) string {
 			reroll_count -= 1
 			explode := "("
 			for x := 0; x <= 1; {
-				x = rand.IntN(9) + 1
+				x = rand.IntN(10) + 1
 				sum -= 1
 				reroll_count += 1
 				explode += strconv.Itoa(x) + ","
