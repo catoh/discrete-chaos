@@ -33,7 +33,7 @@ func init() {
 }
 
 var (
-	integerOptionMinValue          = 1.0
+	//integerOptionMinValue          = 1.0
 	dmPermission                   = false
 	defaultMemberPermissions int64 = discordgo.PermissionManageServer
 	r                              = strings.NewReplacer("+", " + ", "-", " - ")
@@ -96,17 +96,17 @@ var (
 				// Option values must be type asserted from interface{}.
 				// Discordgo provides utility functions to make this simple.
 				//margs = append(margs, opt.IntValue())
-				margs = append(margs, opt.StringValue())
-				msgformat += "> dice-pool: %d\n"
 				pool = eval(r.Replace(opt.StringValue()))
+				margs = append(margs, pool)
+				msgformat += "> dice-pool: %d\n"
 				//pool = int(opt.IntValue())
 			}
 
 			if opt, ok := optionMap["difficulty"]; ok {
 				//margs = append(margs, opt.IntValue())
-				margs = append(margs, opt.StringValue())
-				msgformat += "> difficulty: %d\n"
 				diff = eval(r.Replace(opt.StringValue()))
+				margs = append(margs, diff)
+				msgformat += "> difficulty: %d\n"
 				//diff = int(opt.IntValue())
 			}
 
@@ -187,11 +187,10 @@ func eval(term string) int {
 			sub = true
 		} else {
 			num, _ := strconv.Atoi(v)
-			if add == true {
-
+			if add {
 				result += num
 				add = false
-			} else if sub == true {
+			} else if sub {
 				result -= num
 				sub = false
 			} else {
