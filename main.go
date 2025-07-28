@@ -33,7 +33,6 @@ func init() {
 }
 
 var (
-	//integerOptionMinValue          = 1.0
 	dmPermission                   = false
 	defaultMemberPermissions int64 = discordgo.PermissionManageServer
 	r                              = strings.NewReplacer(" ", "", "+", " + ", "-", " - ")
@@ -44,13 +43,10 @@ var (
 			Description: "Roll a number of d10s and compare to a difficulty threshold, returns the number of successes",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					//Type:        discordgo.ApplicationCommandOptionInteger,
 					Type:        discordgo.ApplicationCommandOptionString,
 					Name:        "dice-pool",
 					Description: "Number of dice in the pool",
-					//MinValue:    &integerOptionMinValue,
-					//MaxValue:    20,
-					Required: true,
+					Required:    true,
 				},
 
 				// Required options must be listed first since optional parameters
@@ -58,13 +54,10 @@ var (
 				// The same concept applies to Discord's Slash-commands API
 
 				{
-					//Type:        discordgo.ApplicationCommandOptionInteger,
 					Type:        discordgo.ApplicationCommandOptionString,
 					Name:        "difficulty",
 					Description: "Difficulty threshold for success",
-					//MinValue:    &integerOptionMinValue,
-					//MaxValue:    20,
-					Required: true,
+					Required:    true,
 				},
 			},
 		},
