@@ -36,6 +36,7 @@ var (
 	integerOptionMinValue          = 1.0
 	dmPermission                   = false
 	defaultMemberPermissions int64 = discordgo.PermissionManageServer
+	r                              = strings.NewReplacer("+", " + ", "-", " - ")
 
 	commands = []*discordgo.ApplicationCommand{
 		{
@@ -43,12 +44,13 @@ var (
 			Description: "Roll a number of d10s and compare to a difficulty threshold, returns the number of successes",
 			Options: []*discordgo.ApplicationCommandOption{
 				{
-					Type:        discordgo.ApplicationCommandOptionInteger,
+					//Type:        discordgo.ApplicationCommandOptionInteger,
+					Type:        discordgo.ApplicationCommandOptionString,
 					Name:        "dice-pool",
 					Description: "Number of dice in the pool",
-					MinValue:    &integerOptionMinValue,
-					MaxValue:    20,
-					Required:    true,
+					//MinValue:    &integerOptionMinValue,
+					//MaxValue:    20,
+					Required: true,
 				},
 
 				// Required options must be listed first since optional parameters
@@ -56,12 +58,13 @@ var (
 				// The same concept applies to Discord's Slash-commands API
 
 				{
-					Type:        discordgo.ApplicationCommandOptionInteger,
+					//Type:        discordgo.ApplicationCommandOptionInteger,
+					Type:        discordgo.ApplicationCommandOptionString,
 					Name:        "difficulty",
 					Description: "Difficulty threshold for success",
-					MinValue:    &integerOptionMinValue,
-					MaxValue:    20,
-					Required:    true,
+					//MinValue:    &integerOptionMinValue,
+					//MaxValue:    20,
+					Required: true,
 				},
 			},
 		},
@@ -92,15 +95,19 @@ var (
 			if opt, ok := optionMap["dice-pool"]; ok {
 				// Option values must be type asserted from interface{}.
 				// Discordgo provides utility functions to make this simple.
-				margs = append(margs, opt.IntValue())
+				//margs = append(margs, opt.IntValue())
+				margs = append(margs, opt.StringValue())
 				msgformat += "> dice-pool: %d\n"
-				pool = int(opt.IntValue())
+				pool = eval(r.Replace(opt.StringValue()))
+				//pool = int(opt.IntValue())
 			}
 
 			if opt, ok := optionMap["difficulty"]; ok {
-				margs = append(margs, opt.IntValue())
+				//margs = append(margs, opt.IntValue())
+				margs = append(margs, opt.StringValue())
 				msgformat += "> difficulty: %d\n"
-				diff = int(opt.IntValue())
+				diff = eval(r.Replace(opt.StringValue()))
+				//diff = int(opt.IntValue())
 			}
 
 			msgformat += roll(pool, diff)
@@ -164,6 +171,33 @@ func roll(p int, d int) string {
 	result += "Total Successes: " + strconv.Itoa(sum) + "\n"
 	if reroll_count > 0 {
 		result += "Exploded " + strconv.Itoa(reroll_count) + " times\n"
+	}
+	return result
+}
+
+func eval(term string) int {
+	var formula = strings.Split(term, " ")
+	var add = false
+	var sub = false
+	var result = 0
+	for _, v := range formula {
+		if v == "+" {
+			add = true
+		} else if v == "-" {
+			sub = true
+		} else {
+			num, _ := strconv.Atoi(v)
+			if add == true {
+
+				result += num
+				add = false
+			} else if sub == true {
+				result -= num
+				sub = false
+			} else {
+				result = num
+			}
+		}
 	}
 	return result
 }
