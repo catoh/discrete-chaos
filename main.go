@@ -36,7 +36,7 @@ var (
 	//integerOptionMinValue          = 1.0
 	dmPermission                   = false
 	defaultMemberPermissions int64 = discordgo.PermissionManageServer
-	r                              = strings.NewReplacer("+", " + ", "-", " - ")
+	r                              = strings.NewReplacer(" ", "", "+", " + ", "-", " - ")
 
 	commands = []*discordgo.ApplicationCommand{
 		{
@@ -95,19 +95,15 @@ var (
 			if opt, ok := optionMap["dice-pool"]; ok {
 				// Option values must be type asserted from interface{}.
 				// Discordgo provides utility functions to make this simple.
-				//margs = append(margs, opt.IntValue())
 				pool = eval(r.Replace(opt.StringValue()))
 				margs = append(margs, pool)
 				msgformat += "> dice-pool: %d\n"
-				//pool = int(opt.IntValue())
 			}
 
 			if opt, ok := optionMap["difficulty"]; ok {
-				//margs = append(margs, opt.IntValue())
 				diff = eval(r.Replace(opt.StringValue()))
 				margs = append(margs, diff)
 				msgformat += "> difficulty: %d\n"
-				//diff = int(opt.IntValue())
 			}
 
 			msgformat += roll(pool, diff)
@@ -133,7 +129,6 @@ func roll(p int, d int) string {
 	reroll_count := 0
 	for i := 0; i < p; i++ {
 		// roll d10
-		//rand.Seed(time.Now().UnixNano())
 		roll := rand.IntN(10) + 1
 		// append roll to pool message
 		if rolls != "" {
