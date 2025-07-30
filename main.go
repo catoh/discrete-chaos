@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
@@ -14,9 +15,19 @@ import (
 )
 
 // Bot parameters
+type BotParameters struct {
+	BOT_TOKEN string
+	GUILD_ID  string
+}
+
 var (
-	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
-	BotToken       = flag.String("token", "MTM0NzY4NTczNjk2MjMyNjY3Mg.GqKUx2.M1kUKmd_NMcoYtDoZ6AKfVD32PgREGPw-H5kwQ", "Bot access token")
+	jsonData, _ = os.ReadFile("parameters.json")
+
+	bp BotParameters
+	_  = json.Unmarshal(jsonData, &bp)
+
+	GuildID        = flag.String("guild", bp.GUILD_ID, "Test guild ID. If not passed - bot registers commands globally")
+	BotToken       = flag.String("token", bp.BOT_TOKEN, "Bot access token")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
 )
 
